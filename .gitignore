@@ -1,0 +1,4 @@
+# Ignorar todo el contenido de log
+log/*
+# Pero mantener el folder en el repo con un placeholder
+!log/.gitkeep

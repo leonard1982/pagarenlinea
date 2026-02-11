@@ -1,0 +1,188 @@
+public function envio($pk,$data,$item,$empCod){
+	$content = "<CFE>\n";
+	$content .= "\t<CFEItem>\n";
+	$content .= "\t\t<IdDoc>\n";
+	$content .= "\t\t\t<CFETipoCFE>$data[1]</CFETipoCFE>\n";
+	$content .= "\t\t\t<CFESerie>$data[2]</CFESerie>\n";
+	$content .= "\t\t\t<CFENro>$data[3]</CFENro>\n";
+	$content .= "\t\t\t<CFEImpresora>$data[4]</CFEImpresora>\n";
+	$content .= "\t\t\t<CFEImp>$data[5]</CFEImp>\n";
+	$content .= "\t\t\t<CFEImpCantidad>$data[6]</CFEImpCantidad>\n";
+	$content .= "\t\t\t<CFEFchEmis>$data[7]</CFEFchEmis>\n";
+	$content .= "\t\t\t<CFEPeriodoDesde>$data[8]</CFEPeriodoDesde>\n";
+	$content .= "\t\t\t<CFEPeriodoHasta>$data[9]</CFEPeriodoHasta>\n";
+	$content .= "\t\t\t<CFEMntBruto>$data[10]</CFEMntBruto>\n";
+	$content .= "\t\t\t<CFEFmaPago>$data[11]</CFEFmaPago>\n";
+	$content .= "\t\t\t<CFEFchVenc>$data[12]</CFEFchVenc>\n";
+	$content .= "\t\t\t<CFETipoTraslado>$data[13]</CFETipoTraslado>\n";
+	$content .= "\t\t\t<CFEAdenda>$data[14]</CFEAdenda>\n";
+	$content .= "\t\t\t<CFEAdendaImagen>".utf8_encode(base64_encode($data[15]))."</CFEAdendaImagen>\n";
+	$content .= "\t\t\t<CFEEfectivo>V$data[16]</CFEEfectivo>\n";
+	$content .= "\t\t\t<CFEPesoTotal>$data[17]</CFEPesoTotal>\n";
+	$content .= "\t\t\t<CFECambio>$data[18]</CFECambio>\n";
+	$content .= "\t\t\t<CFEAcimaUI>$data[19]</CFEAcimaUI>\n";
+	$content .= "\t\t\t<CFENumReferencia>$data[20]</CFENumReferencia>\n";
+	$content .= "\t\t\t<CAEApodo>$data[21]</CAEApodo>\n";
+	$content .= "\t\t\t<CFEImpFormato>$data[22]</CFEImpFormato>\n";
+	$content .= "\t\t\t<CFEIdCompra>$data[23]</CFEIdCompra>\n";
+	$content .= "\t\t\t<CFEIdCompraApodo>$data[24]</CFEIdCompraApodo>\n";
+	$content .= "\t\t\t<CFEExpClaVenta>$data[25]</CFEExpClaVenta>\n";
+	$content .= "\t\t\t<CFEExpModVenta>$data[26]</CFEExpModVenta>\n";
+	$content .= "\t\t\t<CFEExpViaTransporte>$data[27]</CFEExpViaTransporte>\n";
+	$content .= "\t\t\t<CFETpoOperacion>$data[28]</CFETpoOperacion>\n";
+	$content .= "\t\t\t<CFEQrCode>$data[29]</CFEQrCode>\n";
+	$content .= "\t\t\t<CFEDatosAvanzados>$data[30]</CFEDatosAvanzados>\n";
+	$content .= "\t\t\t<CFERepImpresa>$data[31]</CFERepImpresa>\n";
+	$content .= "\t\t\t<CFEInfAdicional>$data[32]</CFEInfAdicional>\n";
+	$content .= "\t\t\t<CFECobranzaPropia>$data[123]</CFECobranzaPropia>\n";
+	$content .= "\t\t</IdDoc>\n";
+	$content .= "\t\t<Emisor>\n";
+	foreach ([33=>'EmiRznSoc',34=>'EmiComercial',35=>'EmiGiroEmis',36=>'EmiTelefono',37=>'EmiTelefono2',38=>'EmiCorreoEmisor',39=>'EmiSucursal',40=>'EmiDomFiscal',41=>'EmiCiudad',42=>'EmiDepartamento',43=>'EmiInfAdicional'] as $idx => $tag) {
+		$content .= "\t\t\t<$tag>$data[$idx]</$tag>\n";
+	}
+	$content .= "\t\t</Emisor>\n";
+	$content .= "\t\t<Receptor>\n";
+	foreach ([44=>'RcpTipoDocRecep',45=>'RcpTipoDocDscRecep',46=>'RcpCodPaisRecep',47=>'RcpDocRecep',48=>'RcpRznSocRecep',49=>'RcpDirRecep',50=>'RcpCiudadRecep',51=>'RcpDeptoRecep',52=>'RcpCP',53=>'RcpCorreoRecep',54=>'RcpInfAdiRecep',55=>'RcpDirPaisRecep',56=>'RcpDstEntregaRecep',57=>'RcpEmlArchivos'] as $idx => $tag) {
+		$content .= "\t\t\t<$tag>$data[$idx]</$tag>\n";
+	}
+	$content .= "\t\t</Receptor>\n";
+	$content .= "\t\t<Mandante>\n";
+	foreach ([58=>'MndTipDoc',59=>'MndTipDocDsc',60=>'MndCodPais',61=>'MndNroDocumento',62=>'MndRazSocial',63=>'MndEncriptar'] as $idx => $tag) {
+		$content .= "\t\t\t<$tag>$data[$idx]</$tag>\n";
+	}
+	$content .= "\t\t</Mandante>\n";
+	$content .= "\t\t<Totales>\n";
+	foreach ([64=>'TotTpoMoneda',65=>'TotTpoCambio',66=>'TotMntNoGrv',67=>'TotMntExpoyAsim',68=>'TotMntImpuestoPerc',69=>'TotMntIVaenSusp',70=>'TotMntNetoIvaTasaMin',71=>'TotMntNetoIVATasaBasica',72=>'TotMntNetoIVAOtra',73=>'TotIVATasaMin',74=>'TotIVATasaBasica',75=>'TotMntIVATasaMin',76=>'TotMntIVATasaBasica',77=>'TotMntIVAOtra',78=>'TotMntTotal',79=>'TotMntTotRetenido',80=>'TotMntCreditoFiscal'] as $idx => $tag) {
+		$content .= "\t\t\t<$tag>$data[$idx]</$tag>\n";
+	}
+	if ((string)$data[1] === '182') {
+		$content .= "\t\t\t<RetencPercepTot>\n";
+		$content .= "\t\t\t\t<RetencPercepTotItem>\n";
+		$content .= "\t\t\t\t\t<RetPercCodRet>$data[81]</RetPercCodRet>\n";
+		$content .= "\t\t\t\t\t<RetPercValRetPerc>$data[82]</RetPercValRetPerc>\n";
+		$content .= "\t\t\t\t\t<RetPercValCreditoFiscal>$data[83]</RetPercValCreditoFiscal>\n";
+		$content .= "\t\t\t\t</RetencPercepTotItem>\n";
+		$content .= "\t\t\t</RetencPercepTot>\n";
+	}
+	$content .= "\t\t\t<TotMontoNF>$data[84]</TotMontoNF>\n";
+	$content .= "\t\t\t<TotMntPagar>$data[85]</TotMntPagar>\n";
+	$content .= "\t\t</Totales>\n";
+	$content .= "\t\t<CodBarras>\n";
+	$prevContainer = null;
+	foreach ([86=>'CodBarRedPagCodEmpresa',87=>'CodBarRedPagNroCliente',88=>'CodBarRedPagFchVencimiento',89=>'CodBarRedPagMoneda',90=>'CodBarRedPagImpMinimo',91=>'CodBarRedPagImpTotal',92=>'CodBarAbtCodEmpresa',93=>'CodBarAbtNroCliente',94=>'CodBarAbtFchVencimiento',95=>'CodBarAbtMoneda',96=>'CodBarAbtImporte',97=>'CodBarAbtCuota',98=>'CodBarAbtMora',99=>'CodBarAbtCuenta'] as $idx => $tag) {
+		$container = $idx <= 91 ? 'CodBarRedPagos' : 'CodBarAbitab';
+		if ($prevContainer !== $container) {
+			if ($prevContainer !== null) {
+				$content .= "\t\t\t</$prevContainer>\n";
+			}
+			$content .= "\t\t\t<$container>\n";
+			$prevContainer = $container;
+		}
+		$content .= "\t\t\t\t<$tag>$data[$idx]</$tag>\n";
+	}
+	if ($prevContainer !== null) {
+		$content .= "\t\t\t</$prevContainer>\n";
+	}
+	$content .= "\t\t</CodBarras>\n";
+	$content .= "\t\t<Detalle>\n";
+	foreach($item as $itens) {
+		$content .= "\t\t\t<Item>\n";
+		$content .= "\t\t\t\t<CodItem>\n";
+		$content .= "\t\t\t\t\t<CodItemItem>\n";
+		$content .= "\t\t\t\t\t\t<IteCodiTpoCod>INT1</IteCodiTpoCod>\n";
+		$content .= "\t\t\t\t\t\t<IteCodiCod>$itens[24]</IteCodiCod>\n";
+		$content .= "\t\t\t\t\t</CodItemItem>\n";
+		if (in_array($itens[27], ['GTIN8','GTIN12','GTIN13','GTIN14'], true)) {
+			$content .= "\t\t\t\t\t<CodItemItem>\n";
+			$content .= "\t\t\t\t\t\t<IteCodiTpoCod>$itens[27]</IteCodiTpoCod>\n";
+			$content .= "\t\t\t\t\t\t<IteCodiCod>$itens[28]</IteCodiCod>\n";
+			$content .= "\t\t\t\t\t</CodItemItem>\n";
+		}
+		$content .= "\t\t\t\t</CodItem>\n";
+		foreach (['IteIndFact'=>2,'IteIndAgenteResp'=>3,'IteNomItem'=>4,'IteDscItem'=>5,'IteCantidad'=>6,'IteUniMed'=>7,'ItePrecioUnitario'=>8,'IteDescuentoPct'=>9,'IteDescuentoMonto'=>10] as $tag => $idx) {
+			$content .= "\t\t\t\t<$tag>$itens[$idx]</$tag>\n";
+		}
+		if ((string)$data[1] === '182') {
+			$content .= "\t\t\t\t<RetencPercep>\n";
+			$content .= "\t\t\t\t\t<RetencPercepItem>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPercCodRet>$itens[18]</IteRetPercCodRet>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPercDscRet>$itens[19]</IteRetPercDscRet>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPercTasa>$itens[20]</IteRetPercTasa>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPercMntSujetoaRet>$itens[21]</IteRetPercMntSujetoaRet>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPercValRetPerc>$itens[15]</IteRetPercValRetPerc>\n";
+			$content .= "\t\t\t\t\t\t<IteRetPerc>$itens[22]</IteRetPerc>\n";
+			$content .= "\t\t\t\t\t</RetencPercepItem>\n";
+			$content .= "\t\t\t\t</RetencPercep>\n";
+		}
+		$content .= "\t\t\t\t<IteMontoItem>$itens[23]</IteMontoItem>\n";
+		$content .= "\t\t\t</Item>\n";
+	}
+	$content .= "\t\t</Detalle>\n";
+	if (!empty($data[109]) || $data[109] < 0) {
+		$content .= "\t\t<DscRcgGlobal>\n";
+		$content .= "\t\t\t<DRGItem>\n";
+		$content .= "\t\t\t\t<DscRcgNroLinDR>$data[104]</DscRcgNroLinDR>\n";
+		$content .= "\t\t\t\t<DscRcgTpoMovDR>$data[105]</DscRcgTpoMovDR>\n";
+		$content .= "\t\t\t\t<DscRcgTpoDR>$data[106]</DscRcgTpoDR>\n";
+		$content .= "\t\t\t\t<DscRcgCodDR>$data[107]/Recargo</DscRcgCodDR>\n";
+		$content .= "\t\t\t\t<DscRcgGlosaDR>$data[108]</DscRcgGlosaDR>\n";
+		$content .= "\t\t\t\t<DscRcgValorDR>$data[109]</DscRcgValorDR>\n";
+		$content .= "\t\t\t\t<DscRcgIndFactDR>$data[110]</DscRcgIndFactDR>\n";
+		$content .= "\t\t\t</DRGItem>\n";
+		$content .= "\t\t</DscRcgGlobal>\n";
+	}
+	if (!empty($data[111])) {
+		$content .= "\t\t<MediosPago>\n";
+		$content .= "\t\t\t<MediosPagoItem>\n";
+		$content .= "\t\t\t\t<MedPagNroLinMP>$data[111]</MedPagNroLinMP>\n";
+		$content .= "\t\t\t\t<MedPagCodMP>$data[112]</MedPagCodMP>\n";
+		$content .= "\t\t\t\t<MedPagGlosaMP>$data[113]</MedPagGlosaMP>\n";
+		$content .= "\t\t\t\t<MedPagOrdenMP>$data[114]</MedPagOrdenMP>\n";
+		$content .= "\t\t\t\t<MedPagValorPago>$data[115]</MedPagValorPago>\n";
+		$content .= "\t\t\t</MediosPagoItem>\n";
+		$content .= "\t\t</MediosPago>\n";
+	}
+	$tiposReferencia = [102,112,122,103,113,123,132,133,142,143,202,212,222,203,213,223,232,242,233,243,152,252,153,253];
+	$includeReferencia = in_array((int)$data[1], $tiposReferencia, true) || ((int)($data[123] ?? 0) === 1);
+	if ($includeReferencia) {
+		$content .= "\t\t<Referencia>\n";
+		if (!empty($data[999]) && isset($data[116]) && is_array($data[116])) {
+			foreach ($data[116] as $idx => $value) {
+				$content .= "\t\t\t<ReferenciaItem>\n";
+				foreach ([
+					'RefNroLinRef' => 116,
+					'RefIndGlobal' => 117,
+					'RefTpoDocRef' => 118,
+					'RefSerie' => 119,
+					'RefNroCFERef' => 120,
+					'RefRazonRef' => 121,
+					'RefFechaCFEref' => 122,
+				] as $tag => $source) {
+					$valueToPrint = is_array($data[$source]) ? ($data[$source][$idx] ?? '') : ($data[$source] ?? '');
+					$content .= "\t\t\t\t<$tag>$valueToPrint</$tag>\n";
+				}
+				$content .= "\t\t\t</ReferenciaItem>\n";
+			}
+		} else {
+			$content .= "\t\t\t<ReferenciaItem>\n";
+			foreach ([
+				'RefNroLinRef' => 116,
+				'RefIndGlobal' => 117,
+				'RefTpoDocRef' => 118,
+				'RefSerie' => 119,
+				'RefNroCFERef' => 120,
+				'RefRazonRef' => 121,
+				'RefFechaCFEref' => 122,
+			] as $tag => $source) {
+				$content .= "\t\t\t\t<$tag>$data[$source]</$tag>\n";
+			}
+			$content .= "\t\t\t</ReferenciaItem>\n";
+		}
+		$content .= "\t\t</Referencia>\n";
+	}
+	$content .= "\t</CFEItem>\n";
+	$content .= "</CFE>\n";
+	$clave = md5($pk.$content);
+	$arr = array( 'Xmlrecepcao' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EnvioCFE>\n\t<Encabezado>\n\t\t<EmpCodigo>$empCod</EmpCodigo>\n\t\t<EmpPK>RUdYwvzP62niXHmI7cfPoA==</EmpPK>\n\t\t<EmpCK>$clave</EmpCK>\n\t</Encabezado>\n$content</EnvioCFE>");
+	return $arr;
+}

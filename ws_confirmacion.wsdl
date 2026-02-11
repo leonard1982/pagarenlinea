@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="urn:sistarbanc-spe-confirmacion"
+  targetNamespace="urn:sistarbanc-spe-confirmacion"
+  name="SPEConfirmacionService">
+
+  <!-- ===================================== -->
+  <!-- 1️⃣ Tipos XML -->
+  <!-- ===================================== -->
+  <wsdl:types>
+    <xs:schema targetNamespace="urn:sistarbanc-spe-confirmacion" elementFormDefault="qualified">
+
+      <!-- ========================= -->
+      <!-- Tipos simples reutilizables -->
+      <!-- ========================= -->
+
+      <!-- String(50) para idFactura (serie+número, etc.) -->
+      <xs:simpleType name="IdFacturaType">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+        </xs:restriction>
+      </xs:simpleType>
+
+      <!-- String(2) solo dígitos: 00 éxito; otros = error -->
+      <xs:simpleType name="CodigoRespuestaType">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="\d{2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+
+      <!-- Importe con dos decimales SIN separador (solo dígitos).
+           Ej.: 123456 => 1234.56 -->
+      <xs:simpleType name="ImporteSinSeparadorType">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="\d+"/>
+        </xs:restriction>
+      </xs:simpleType>
+
+      <!-- Fecha YYYYMMDD (8 dígitos) -->
+      <xs:simpleType name="FechaYYYYMMDDType">
+        <xs:restriction base="xs:string">
+          <xs:length value="8"/>
+          <xs:pattern value="\d{8}"/>
+        </xs:restriction>
+      </xs:simpleType>
+
+      <!-- ====== confirmarPagoBanco (legado por factura individual) ====== -->
+      <xs:element name="confirmarPagoBanco">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="idFactura" type="tns:IdFacturaType">
+              <xs:annotation>
+                <xs:documentation>
+                  Código que identifica la factura pagada (puede incluir serie y número).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="codigoRespuesta" type="tns:CodigoRespuestaType">
+              <xs:annotation>
+                <xs:documentation>
+                  Resultado de la transacción (00 indica éxito; cualquier otro valor indica error).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="importe" type="tns:ImporteSinSeparadorType">
+              <xs:annotation>
+                <xs:documentation>
+                  Importe de la factura a pagar, con dos decimales sin separador.
+                  Ejemplo: 123456 representa 1234.56
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="moneda" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Moneda reportada para el pago. (Se usa la definida por la integración; no se restringe en el esquema).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="fechaPago" type="tns:FechaYYYYMMDDType">
+              <xs:annotation>
+                <xs:documentation>
+                  Fecha en la que se confirmó el pago (formato YYYYMMDD).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="confirmarPagoBancoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="codigoRespuesta" type="tns:CodigoRespuestaType"/>
+            <xs:element name="descripcion"     type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <!-- ====== NUEVO: confirmarPagoEmpresa (por idTransaccion que agrupa 1..n facturas) ====== -->
+      <xs:element name="confirmarPagoEmpresa">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="idTransaccion" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Identificador único de la transacción (agrupa 1..n facturas seleccionadas por el cliente).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="idCuenta" type="xs:string" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Identificación del cliente (RUT o cédula). Opcional para validación cruzada.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="codigoRespuesta" type="tns:CodigoRespuestaType">
+              <xs:annotation>
+                <xs:documentation>
+                  Resultado reportado por el banco (00 = aprobado; otro valor = error).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="codigoAutorizacion" type="xs:string" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Código de autorización asignado por el banco cuando la operación es aprobada (00).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="importe" type="tns:ImporteSinSeparadorType">
+              <xs:annotation>
+                <xs:documentation>
+                  Importe total pagado (suma de las facturas), con dos decimales sin separador.
+                  Ejemplo: 123456 representa 1234.56
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="importeDevolucion" type="tns:ImporteSinSeparadorType" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Importe de devolución si la hubo, con dos decimales sin separador (opcional).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="moneda" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Moneda del pago (por ejemplo, UYU).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="confirmarPagoEmpresaResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="codigoRespuesta" type="tns:CodigoRespuestaType"/>
+            <xs:element name="descripcion"     type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <!-- ====== consultarPendientes ====== -->
+      <xs:element name="consultarPendientesRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="identificador" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Identificador único del cliente. Puede ser RUT o número de cédula según corresponda.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <!-- ====== FacturaPendiente ====== -->
+      <xs:complexType name="FacturaPendiente">
+        <xs:sequence>
+          <xs:element name="idCliente" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>
+                Código numérico que identifica al cliente dentro del sistema.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="idFactura" type="tns:IdFacturaType">
+            <xs:annotation>
+              <xs:documentation>
+                Código único de la factura pendiente (puede ser serie+número concatenados).
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="descripcion" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Texto referencial de la factura (p. ej.: “Factura 0001-000123”).
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="importe" type="tns:ImporteSinSeparadorType">
+            <xs:annotation>
+              <xs:documentation>
+                Importe de la factura a pagar, con dos decimales sin separador.
+                Ejemplo: 123456 representa 1234.56
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="moneda" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Moneda de la factura. (Sin restricción en el esquema).
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="fechaVencimiento" type="tns:FechaYYYYMMDDType" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Fecha límite de vencimiento de la factura (YYYYMMDD). Opcional.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="consumidorFinal" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Indicador de consumidor final (CF). Opcional.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+
+          <xs:element name="importeGravado" type="tns:ImporteSinSeparadorType" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                Monto gravado de la factura, con dos decimales sin separador.
+                Ejemplo: 123456 representa 1234.56. Opcional.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:element name="consultarPendientesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="codigoRespuesta" type="tns:CodigoRespuestaType"/>
+            <xs:element name="descripcion"     type="xs:string"/>
+            <xs:element name="facturas" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="factura" type="tns:FacturaPendiente" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="totalImporte" type="tns:ImporteSinSeparadorType" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:schema>
+  </wsdl:types>
+
+  <!-- ===================================== -->
+  <!-- 2️⃣ Mensajes -->
+  <!-- ===================================== -->
+  <!-- confirmarPagoBanco -->
+  <wsdl:message name="confirmarPagoBancoInput">
+    <wsdl:part name="parameters" element="tns:confirmarPagoBanco"/>
+  </wsdl:message>
+  <wsdl:message name="confirmarPagoBancoOutput">
+    <wsdl:part name="parameters" element="tns:confirmarPagoBancoResponse"/>
+  </wsdl:message>
+
+  <!-- confirmarPagoEmpresa -->
+  <wsdl:message name="confirmarPagoEmpresaInput">
+    <wsdl:part name="parameters" element="tns:confirmarPagoEmpresa"/>
+  </wsdl:message>
+  <wsdl:message name="confirmarPagoEmpresaOutput">
+    <wsdl:part name="parameters" element="tns:confirmarPagoEmpresaResponse"/>
+  </wsdl:message>
+
+  <!-- consultarPendientes -->
+  <wsdl:message name="consultarPendientesInput">
+    <wsdl:part name="parameters" element="tns:consultarPendientesRequest"/>
+  </wsdl:message>
+  <wsdl:message name="consultarPendientesOutput">
+    <wsdl:part name="parameters" element="tns:consultarPendientesResponse"/>
+  </wsdl:message>
+
+  <!-- ===================================== -->
+  <!-- 3️⃣ PortType (interfaz lógica) -->
+  <!-- ===================================== -->
+  <wsdl:portType name="SPEConfirmacionPortType">
+
+    <!-- confirmarPagoBanco -->
+    <wsdl:operation name="confirmarPagoBanco">
+      <wsdl:input  message="tns:confirmarPagoBancoInput"/>
+      <wsdl:output message="tns:confirmarPagoBancoOutput"/>
+    </wsdl:operation>
+
+    <!-- NUEVO: confirmarPagoEmpresa -->
+    <wsdl:operation name="confirmarPagoEmpresa">
+      <wsdl:input  message="tns:confirmarPagoEmpresaInput"/>
+      <wsdl:output message="tns:confirmarPagoEmpresaOutput"/>
+    </wsdl:operation>
+
+    <!-- consultarPendientes -->
+    <wsdl:operation name="consultarPendientes">
+      <wsdl:input  message="tns:consultarPendientesInput"/>
+      <wsdl:output message="tns:consultarPendientesOutput"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+  <!-- ===================================== -->
+  <!-- 4️⃣ Binding (detalle del transporte) -->
+  <!-- ===================================== -->
+  <wsdl:binding name="SPEConfirmacionBinding" type="tns:SPEConfirmacionPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <!-- confirmarPagoBanco -->
+    <wsdl:operation name="confirmarPagoBanco">
+      <soap:operation soapAction="urn:sistarbanc-spe-confirmacion#confirmarPagoBanco"/>
+      <wsdl:input><soap:body use="literal"/></wsdl:input>
+      <wsdl:output><soap:body use="literal"/></wsdl:output>
+    </wsdl:operation>
+
+    <!-- NUEVO: confirmarPagoEmpresa -->
+    <wsdl:operation name="confirmarPagoEmpresa">
+      <soap:operation soapAction="urn:sistarbanc-spe-confirmacion#confirmarPagoEmpresa"/>
+      <wsdl:input><soap:body use="literal"/></wsdl:input>
+      <wsdl:output><soap:body use="literal"/></wsdl:output>
+    </wsdl:operation>
+
+    <!-- consultarPendientes -->
+    <wsdl:operation name="consultarPendientes">
+      <soap:operation soapAction="urn:sistarbanc-spe-confirmacion#consultarPendientes"/>
+      <wsdl:input><soap:body use="literal"/></wsdl:input>
+      <wsdl:output><soap:body use="literal"/></wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- ===================================== -->
+  <!-- 5️⃣ Service (endpoint físico) -->
+  <!-- ===================================== -->
+  <wsdl:service name="SPEConfirmacionService">
+    <wsdl:port name="SPEConfirmacionPort" binding="tns:SPEConfirmacionBinding">
+      <soap:address location="https://www.datosdynamica.net/pagarenlinea/ws_confirmacion.php"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

@@ -1,0 +1,41 @@
+Organizacion del Proyecto de Pago en Linea
+
+Este documento describe la estructura de los componentes activos, los scripts de soporte y los archivos obsoletos.
+
+1. Raiz del proyecto
+   - `index.php`: punto de entrada publico. Solicita el RUT, consume `validarRUT.php`, muestra facturas y envia los datos transformados al script de pago.
+   - `iniciar_pago.php`: recibe el payload en base64url o directamente por GET, valida/normaliza campos, genera la firma con `generar_firma()`, registra logs y redirige al SPE.
+   - `retorno.php`: recibe la notificacion del SPE una vez procesada la transaccion y actualiza los estados en la base de datos.
+   - `ws_confirmacion.php`: servicio que el SPE puede invocar para confirmar transacciones, valida firmas, actualiza estados y usa `migrateInvoicyServices*.php` segun el entorno.
+   - `config.php`: constantes de entorno, credenciales, rutas y nombres de tablas; requerido por casi todos los scripts PHP.
+   - `baseDeDatos.php`: clase `dbMysql` y helpers para consultas; central en operaciones CRUD y sincronizacion con SPE.
+   - `validarRUT.php`: endpoint que devuelve JSON con los datos de empresa y facturas, usado por el JS para renderizar la pantalla principal.
+   - `LEEME.txt`: este archivo, mantenido actualizado como guia.
+
+2. Recursos publicos
+   - `/css/index.css`: estilos principales de la UI que complementan los utilitarios de Tailwind cargados en `index.php`.
+   - `/js/index.js`: toda la logica del frontend (validaciones, fetch, render, control de pantallas, auto-consulta si se precarga el RUT y armado del request final para iniciar el pago).
+
+3. Claves y certificados
+   - `/keys/cert_test.pem`, `/keys/privkey.pem`, `/keys/pubkey.pem`: certificados y claves usados para pruebas y validaciones locales. Protege su acceso.
+
+4. Registros de ejecucion
+   - `/log/`: archivo de logs generados por `iniciar_pago.php` y `ws_confirmacion.php`. Conserva informacion de payloads, firmas, verificaciones y respuestas del SPE.
+   - `CFE_xml.txt`: ejemplo de CFE exportado automaticamente. No impacta el flujo y se usa solo para referencia historica.
+
+5. Archivos obsoletos / auxiliares (todos dentro de `/obsoletos/`, no deben incluirse en los flujos activos)
+   - `enviar_prueba_sistarbanc.php`, `post_probe_*.php`, `test_client.php`: utilitarios antiguos para pruebas de conectividad con el SPE.
+   - `original_method.txt`, `current_method.txt`, `apply_method.py`, `extract_current.py`: notas y scripts de soporte para mantener sincronizados los archivos de migracion de Invoicy.
+   - `migrateInvoicyServices.php`, `migrateInvoicyServicesPRODUCCION.php`: scripts que contien la logica de adaptacion de Invoicy; se incluyen segun `APP_ENV`.
+   - `debug_sig.php`: script de debug para firmas (solo si todavia lo usas, sino tambien puede quedar en obsoletos).
+
+6. Flujo general esperado
+   1. `index.php` carga, el usuario ingresa su RUT o llega con `x` (base64). El JS valida y muestra las facturas obtenidas desde `validarRUT.php`.
+   2. El usuario elige banco y presiona "Pagar". `index.js` arma el JSON, lo codifica y abre `iniciar_pago.php`.
+   3. `iniciar_pago.php` transforma, firma y guarda logs antes de redirigir al SPE. Si `debug=1`, muestra un panel con los datos.
+   4. El SPE responde via `retorno.php` y/o `ws_confirmacion.php`, que confirman la transaccion y escriben el estado en la base de datos.
+
+7. Recomendaciones
+   - Usa `debug_sig.php` solo para pruebas puntuales de firmas; mantenerlo en `/obsoletos/` para evitar confusiones.
+   - Si necesitas generar logs adicionales, amplía `/log/` sin borrar los existentes, ya que contienen historiales de soporte.
+   - El directorio `/obsoletos/` conserva versiones previas ya sin uso.

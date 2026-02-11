@@ -1,0 +1,309 @@
+public function envio($pk,$data,$item,$empCod){
+		$content = "<CFE>
+		<CFEItem>
+			<IdDoc>
+				<CFETipoCFE>$data[1]</CFETipoCFE>
+				<CFESerie>$data[2]</CFESerie>
+				<CFENro>$data[3]</CFENro>
+				<CFEImpresora>$data[4]</CFEImpresora>
+				<CFEImp>$data[5]</CFEImp>
+				<CFEImpCantidad>$data[6]</CFEImpCantidad>
+				<CFEFchEmis>$data[7]</CFEFchEmis>
+				<CFEPeriodoDesde>$data[8]</CFEPeriodoDesde>
+				<CFEPeriodoHasta>$data[9]</CFEPeriodoHasta>
+				<CFEMntBruto>$data[10]</CFEMntBruto>
+				<CFEFmaPago>$data[11]</CFEFmaPago>
+				<CFEFchVenc>$data[12]</CFEFchVenc>
+				<CFETipoTraslado>$data[13]</CFETipoTraslado>
+				<CFEAdenda>$data[14]</CFEAdenda>
+				<CFEAdendaImagen>".utf8_encode(base64_encode($data[15]))."</CFEAdendaImagen>
+				<CFEEfectivo>V$data[16]</CFEEfectivo>
+				<CFEPesoTotal>$data[17]</CFEPesoTotal>
+				<CFECambio>$data[18]</CFECambio>
+				<CFEAcimaUI>$data[19]</CFEAcimaUI>
+				<CFENumReferencia>$data[20]</CFENumReferencia>
+				<CAEApodo>$data[21]</CAEApodo>
+				<CFEImpFormato>$data[22]</CFEImpFormato>
+				<CFEIdCompra>$data[23]</CFEIdCompra>
+				<CFEIdCompraApodo>$data[24]</CFEIdCompraApodo>
+				<CFEExpClaVenta>$data[25]</CFEExpClaVenta>
+				<CFEExpModVenta>$data[26]</CFEExpModVenta>
+				<CFEExpViaTransporte>$data[27]</CFEExpViaTransporte>
+				<CFETpoOperacion>$data[28]</CFETpoOperacion>
+				<CFEQrCode>$data[29]</CFEQrCode>
+				<CFEDatosAvanzados>$data[30]</CFEDatosAvanzados>
+				<CFERepImpresa>$data[31]</CFERepImpresa>
+				<CFEInfAdicional>$data[32]</CFEInfAdicional>
+				<CFECobranzaPropia>$data[123]</CFECobranzaPropia>
+			</IdDoc>
+			<Emisor>
+				<EmiRznSoc>$data[33]</EmiRznSoc>
+				<EmiComercial>$data[34]</EmiComercial>
+				<EmiGiroEmis>$data[35]</EmiGiroEmis>
+				<EmiTelefono>$data[36]</EmiTelefono>
+				<EmiTelefono2>$data[37]</EmiTelefono2>
+				<EmiCorreoEmisor>$data[38]</EmiCorreoEmisor>
+				<EmiSucursal>$data[39]</EmiSucursal>
+				<EmiDomFiscal>$data[40]</EmiDomFiscal>
+				<EmiCiudad>$data[41]</EmiCiudad>
+				<EmiDepartamento>$data[42]</EmiDepartamento>
+				<EmiInfAdicional>$data[43]</EmiInfAdicional>
+			</Emisor>
+			<Receptor>
+				<RcpTipoDocRecep>$data[44]</RcpTipoDocRecep>
+				<RcpTipoDocDscRecep>$data[45]</RcpTipoDocDscRecep>
+				<RcpCodPaisRecep>$data[46]</RcpCodPaisRecep>
+				<RcpDocRecep>$data[47]</RcpDocRecep>
+				<RcpRznSocRecep>$data[48]</RcpRznSocRecep>
+				<RcpDirRecep>$data[49]</RcpDirRecep>
+				<RcpCiudadRecep>$data[50]</RcpCiudadRecep>
+				<RcpDeptoRecep>$data[51]</RcpDeptoRecep>
+				<RcpCP>$data[52]</RcpCP>
+				<RcpCorreoRecep>$data[53]</RcpCorreoRecep>
+				<RcpInfAdiRecep>$data[54]</RcpInfAdiRecep>
+				<RcpDirPaisRecep>$data[55]</RcpDirPaisRecep>
+				<RcpDstEntregaRecep>$data[56]</RcpDstEntregaRecep>
+				<RcpEmlArchivos>$data[57]</RcpEmlArchivos>
+			</Receptor>
+			<Mandante>
+				<MndTipDoc>$data[58]</MndTipDoc>
+				<MndTipDocDsc>$data[59]</MndTipDocDsc>
+				<MndCodPais>$data[60]</MndCodPais>
+				<MndNroDocumento>$data[61]</MndNroDocumento>
+				<MndRazSocial>$data[62]</MndRazSocial>
+				<MndEncriptar>$data[63]</MndEncriptar>
+			</Mandante>
+			<Totales>
+				<TotTpoMoneda>$data[64]</TotTpoMoneda>
+				<TotTpoCambio>$data[65]</TotTpoCambio>
+				<TotMntNoGrv>$data[66]</TotMntNoGrv>
+				<TotMntExpoyAsim>$data[67]</TotMntExpoyAsim>
+				<TotMntImpuestoPerc>$data[68]</TotMntImpuestoPerc>
+				<TotMntIVaenSusp>$data[69]</TotMntIVaenSusp>
+				<TotMntNetoIvaTasaMin>$data[70]</TotMntNetoIvaTasaMin>
+				<TotMntNetoIVATasaBasica>$data[71]</TotMntNetoIVATasaBasica>
+				<TotMntNetoIVAOtra>$data[72]</TotMntNetoIVAOtra>
+				<TotIVATasaMin>$data[73]</TotIVATasaMin>
+				<TotIVATasaBasica>$data[74]</TotIVATasaBasica>
+				<TotMntIVATasaMin>$data[75]</TotMntIVATasaMin>
+				<TotMntIVATasaBasica>$data[76]</TotMntIVATasaBasica>
+				<TotMntIVAOtra>$data[77]</TotMntIVAOtra>
+				<TotMntTotal>$data[78]</TotMntTotal>
+				<TotMntTotRetenido>$data[79]</TotMntTotRetenido>
+				<TotMntCreditoFiscal>$data[80]</TotMntCreditoFiscal>";
+
+	/* Estos es solo para RESGUARDOS
+	   *****************************  */
+
+	$tipo = $data[1];
+	if($tipo == "182" or $tipo == "182"){
+
+	$content .= "
+				<RetencPercepTot>
+					<RetencPercepTotItem>
+						<RetPercCodRet>$data[81]</RetPercCodRet>
+						<RetPercValRetPerc>$data[82]</RetPercValRetPerc>
+						<RetPercValCreditoFiscal>$data[83]</RetPercValCreditoFiscal>
+					</RetencPercepTotItem>
+				</RetencPercepTot>";
+	}
+
+
+	// ******************************************************************************
+
+
+	$content .= "
+			<TotMontoNF>$data[84]</TotMontoNF>
+			<TotMntPagar>$data[85]</TotMntPagar>
+		</Totales>
+		<CodBarras>
+			<CodBarRedPagos>
+				<CodBarRedPagCodEmpresa>$data[86]</CodBarRedPagCodEmpresa>
+				<CodBarRedPagNroCliente>$data[87]</CodBarRedPagNroCliente>
+				<CodBarRedPagFchVencimiento>$data[88]</CodBarRedPagFchVencimiento>
+				<CodBarRedPagMoneda>$data[89]</CodBarRedPagMoneda>
+				<CodBarRedPagImpMinimo>$data[90]</CodBarRedPagImpMinimo>
+				<CodBarRedPagImpTotal>$data[91]</CodBarRedPagImpTotal>
+			</CodBarRedPagos>
+			<CodBarAbitab>
+				<CodBarAbtCodEmpresa>$data[92]</CodBarAbtCodEmpresa>
+				<CodBarAbtNroCliente>$data[93]</CodBarAbtNroCliente>
+				<CodBarAbtFchVencimiento>$data[94]</CodBarAbtFchVencimiento>
+				<CodBarAbtMoneda>$data[95]</CodBarAbtMoneda>
+				<CodBarAbtImporte>$data[96]</CodBarAbtImporte>
+				<CodBarAbtCuota>$data[97]</CodBarAbtCuota>
+				<CodBarAbtMora>$data[98]</CodBarAbtMora>
+				<CodBarAbtCuenta>$data[99]</CodBarAbtCuenta>
+			</CodBarAbitab>
+		</CodBarras>
+		<Detalle>";
+
+	// FIN DE CODIGO DE BARRAS
+		
+
+		foreach($item as $itens){
+	$content .= "
+			<Item>
+				<CodItem>";
+	
+		switch (($itens[27])){
+			case 'GTIN8':
+			case 'GTIN12':
+			case 'GTIN13':
+			case 'GTIN14':
+				$codExtra = "
+				<CodItemItem>
+					<IteCodiTpoCod>$itens[27]</IteCodiTpoCod>
+					<IteCodiCod>$itens[28]</IteCodiCod>
+				</CodItemItem>";
+				break;
+			default:
+				$codExtra = "";
+		}
+	$content .= "
+				<CodItemItem>
+					<IteCodiTpoCod>INT1</IteCodiTpoCod>
+					<IteCodiCod>$itens[24]</IteCodiCod>
+				</CodItemItem>" . $codExtra . "
+			</CodItem>
+			<IteIndFact>$itens[2]</IteIndFact>
+			<IteIndAgenteResp>$itens[3]</IteIndAgenteResp>
+			<IteNomItem>$itens[4]</IteNomItem>
+			<IteDscItem>$itens[5]</IteDscItem>
+			<IteCantidad>$itens[6]</IteCantidad>
+			<IteUniMed>$itens[7]</IteMed>
+			<ItePrecioUnitario>$itens[8]</ItePrecioUnitario>
+			<IteDescuentoPct>$itens[9]</IteDescuentoPct>
+			<IteDescuentoMonto>$itens[10]</IteDescuentoMonto>";
+
+	if($tipo == "182"){
+	$content .= "
+				<RetencPercep>
+					<RetencPercepItem>
+						<IteRetPercCodRet>$itens[18]</IteRetPercCodRet>
+						<IteRetPercDscRet>$itens[19]</IteRetPercDscRet>
+						<IteRetPercTasa>$itens[20]</IteRetPercTasa>
+						<IteRetPercMntSujetoaRet>$itens[21]</IteRetPercMntSujetoaRet>
+						<IteRetPercValRetPerc>$itens[15]</IteRetPercValRetPerc>
+						<IteRetPerc>$itens[22]</IteRetPerc>
+					</RetencPercepItem>
+				</RetencPercep>";
+	}
+	$content .= "
+				<IteMontoItem>$itens[23]</IteMontoItem>
+			</Item>";
+	}
+
+	$content .= "
+		</Detalle>";
+
+	if ($data[109]>0 OR $data[109]<0){
+	$content .= "
+		<DscRcgGlobal>
+			<DRGItem>
+				<DscRcgNroLinDR>$data[104]</DscRcgNroLinDR>
+				<DscRcgTpoMovDR>$data[105]</DscRcgTpoMovDR>
+				<DscRcgTpoDR>$data[106]</DscRcgTpoDR>
+				<DscRcgCodDR>$data[107]/Recargo</DscRcgCodDR>
+				<DscRcgGlosaDR>$data[108]</DscRcgGlosaDR>
+				<DscRcgValorDR>$data[109]</DscRcgValorDR>
+				<DscRcgIndFactDR>$data[110]</DscRcgIndFactDR>
+			</DRGItem>
+		</DscRcgGlobal>";
+	}
+
+	if ($data[111]>0){
+	$content .= "
+		<MediosPago>
+			<MediosPagoItem>
+				<MedPagNroLinMP>$data[111]</MedPagNroLinMP>
+				<MedPagCodMP>$data[112]</MedPagCodMP>
+				<MedPagGlosaMP>$data[113]</MedPagGlosaMP>
+				<MedPagOrdenMP>$data[114]</MedPagOrdenMP>
+				<MedPagValorPago>$data[115]</MedPagValorPago>
+			</MediosPagoItem>
+		</MediosPago>";
+	}
+
+	if ($tipo==102 or $tipo==112 or $tipo==122 or $tipo==103 or $tipo==113 or $tipo==123 or
+	    $tipo==132 or $tipo==133 or $tipo==142 or $tipo==143 or $tipo==202 or $tipo==212 or $tipo==222 or
+	    $tipo==203 or $tipo==213 or $tipo==223 or $tipo==232 or $tipo==242 or $tipo==233 or $tipo==243 or 
+		$tipo==152 or $tipo==252 or $tipo==153 or $tipo==253 or $data[123]==1)
+	{
+
+		if(isset($data[999]))
+		{
+			if($data[999])
+			{
+				$content .="<Referencia>";
+				for($ve=0;$ve<count($data[116]);$ve++)
+				{
+					$content .="
+						<ReferenciaItem>
+							<RefNroLinRef>".$data[116][$ve]."</RefNroLinRef>
+							<RefIndGlobal>".$data[117][$ve]."</RefIndGlobal>
+							<RefTpoDocRef>".$data[118][$ve]."</RefTpoDocRef>
+							<RefSerie>".$data[119][$ve]."</RefSerie>
+							<RefNroCFERef>".$data[120][$ve]."</RefNroCFERef>
+							<RefRazonRef>".$data[121][$ve]."</RefRazonRef>
+							<RefFechaCFEref>".$data[122][$ve]."</RefFechaCFEref>
+						</ReferenciaItem>";
+				}
+				$content .="</Referencia>";
+			}
+			else
+			{
+				$content .="
+					<Referencia>
+						<ReferenciaItem>
+							<RefNroLinRef>$data[116]</RefNroLinRef>
+							<RefIndGlobal>$data[117]</RefIndGlobal>
+							<RefTpoDocRef>$data[118]</RefTpoDocRef>
+							<RefSerie>$data[119]</RefSerie>
+							<RefNroCFERef>$data[120]</RefNroCFERef>
+							<RefRazonRef>$data[121]</RefRazonRef>
+							<RefFechaCFEref>$data[122]</RefFechaCFEref>
+						</ReferenciaItem>
+					</Referencia>";
+			}
+		}
+		else
+		{
+			$content .="
+				<Referencia>
+					<ReferenciaItem>
+						<RefNroLinRef>$data[116]</RefNroLinRef>
+						<RefIndGlobal>$data[117]</RefIndGlobal>
+						<RefTpoDocRef>$data[118]</RefTpoDocRef>
+						<RefSerie>$data[119]</RefSerie>
+						<RefNroCFERef>$data[120]</RefNroCFERef>
+						<RefRazonRef>$data[121]</RefRazonRef>
+						<RefFechaCFEref>$data[122]</RefFechaCFEref>
+					</ReferenciaItem>
+				</Referencia>";
+		}
+	}
+
+	$content .="
+		</CFEItem>
+	</CFE>";
+	$clave = md5($pk.$content);
+	$arr = array( 'Xmlrecepcao' => "
+		<EnvioCFE>
+			<Encabezado>
+				<EmpCodigo>$empCod</EmpCodigo>
+				<EmpPK>RUdYwvzP62niXHmI7cfPoA==</EmpPK>
+				<EmpCK>$clave</EmpCK>
+			</Encabezado>
+			$content
+		</EnvioCFE>");
+
+/*	// QUITAR ESTAS 3 LINEAS   */
+
+	 $file = fopen("CFE_xml.txt", "w");
+     fwrite($file, $content);
+     fclose($file);
+
+
+	 return $arr;
+}
