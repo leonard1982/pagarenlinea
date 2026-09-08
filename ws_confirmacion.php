@@ -982,6 +982,14 @@ class SPEConfirmacionService
                     }
                 }
 
+                // Reactivacion local: pago e items persistidos, antes de esperar el CFE de Migrate.
+                try {
+                    require_once __DIR__ . '/reactivar_empresa_pago.php';
+                    sistarbancReactivarEmpresaConLog($db, ID_EMPRESA_FIJO, $IdCliente, $IdRecibo, $idTransaccion, $logDir);
+                } catch (Throwable $reactivationError) {
+                    error_log('Sistarbanc: fallo de reactivacion local, recibo ' . (int)$IdRecibo);
+                }
+
                 $vArrayValores = array();
                 $varreglo  = false;
 
