@@ -33,3 +33,9 @@ La regularización histórica se hace sobre pagos existentes, con respaldo y ver
 Para detener la sincronización remota, retirar únicamente el cron y conservar la evidencia. Para revertir el cambio del callback, restaurar su respaldo previo. La reversión de código no revierte estados de empresas ya cambiados.
 
 Control en el Login y modificaciones al proceso de suspensión quedan fuera de esta intervención. Todavía no existe una consulta independiente soportada por Migrate que resuelva todos los retornos inciertos.
+
+## Comprobación en producción del 08/09/2026
+
+Se regularizaron cuatro empresas con pagos anteriores verificados: SU a SI en Dinámica. Las ventas y recibos se compararon antes/después y no cambiaron. Se conservaron respaldos privados y no se repitieron confirmaciones bancarias.
+
+Los cuatro trabajos Migrate se procesaron fuera del callback y terminaron con HTTP 502 alrededor de 60 segundos. Quedaron archivados SIN_CONFIRMACION, sin reenvío automático. Esto valida el procesamiento y el registro del error, pero no demuestra el estado final remoto. Dinámica quedó comprobado; Migrate sigue necesitando una confirmación independiente o la respuesta del proveedor. La identidad de la clienta de la captura original no fue confirmada.
