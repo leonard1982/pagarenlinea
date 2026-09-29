@@ -56,6 +56,7 @@ try {
                         v.Moneda,
                         v.TotMntAPagar,
                         v.Saldo as Saldo,
+                        v.Enlace_Pdf,
                         v.IdVentas,
                         if(c.TipoDoc<>2, 'S','N') as cf,
                         ( (v.TotalVenta - v.TotMntNoGra) -  v.Iva) as TotalGravado2,
@@ -127,6 +128,7 @@ try {
                     'TipoDoc'          => (string)$re['TipoDoc'] ?? '',
                     'IdVentas'         => (int)$IdVentas ?? '',
                     'TotMntAPagar'     => (float)($re['TotMntAPagar'] ?? 0),
+                    'pdf_disponible'   => trim((string)($re['Enlace_Pdf'] ?? '')) !== '',
                 ];
 
                 $total += $saldo; // sumar SALDO

@@ -86,13 +86,40 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const f of facturas) {
       const monto = Number(f.TotMntAPagar || 0);
       const saldo = Number(f.importe || 0);
+      const pdfDisponible = f.pdf_disponible === true;
+      const rutFactura = (infoRut ? infoRut.textContent : '').replace(/[^0-9]/g, '');
 
       const fila = document.createElement('div');
-      fila.className = 'grid grid-cols-2 gap-4 items-center p-4 bg-gray-50 rounded-lg border border-gray-200';
+      fila.className = 'grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_auto] gap-4 items-center p-4 bg-gray-50 rounded-lg border border-gray-200';
+
+      const accionesPdf = pdfDisponible
+        ? `
+          <div class="flex sm:flex-col gap-2 sm:pl-4 sm:border-l sm:border-gray-200">
+            <form method="post" action="factura_pdf.php" target="_blank" class="flex-1">
+              <input type="hidden" name="rut" value="${rutFactura}"/>
+              <input type="hidden" name="idventa" value="${(f.IdVentas ?? '').toString()}"/>
+              <input type="hidden" name="accion" value="ver"/>
+              <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Ver PDF de la factura ${(f.Serie ?? '')}${(f.Numero ?? '')}">
+                <span aria-hidden="true">&#128196;</span> Ver PDF
+              </button>
+            </form>
+            <form method="post" action="factura_pdf.php" target="_blank" class="flex-1">
+              <input type="hidden" name="rut" value="${rutFactura}"/>
+              <input type="hidden" name="idventa" value="${(f.IdVentas ?? '').toString()}"/>
+              <input type="hidden" name="accion" value="descargar"/>
+              <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Descargar PDF de la factura ${(f.Serie ?? '')}${(f.Numero ?? '')}">
+                <span aria-hidden="true">&#8681;</span> Descargar
+              </button>
+            </form>
+          </div>`
+        : `
+          <div class="sm:pl-4 sm:border-l sm:border-gray-200 text-sm font-medium text-gray-500">
+            PDF no disponible
+          </div>`;
 
       // 👇 Se agregan TODOS los hidden que usaremos para armar el payload
       fila.innerHTML = `
-        <div class="col-span-1 text-sm text-gray-700">
+        <div class="text-sm text-gray-700 min-w-0">
           <input type="hidden" class="txt_idVenta"        value="${(f.IdVentas ?? '').toString()}"/>
           <input type="hidden" class="txt_idCuenta"       value="${(f.idCuenta ?? '').toString()}"/>
           <input type="hidden" class="txt_idFactura"      value="${(f.idFactura ?? '').toString()}"/>
@@ -106,10 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <p><span class="font-medium">Fecha:</span> ${f.Fecha ?? ''}</p>
         </div>
 
-        <div class="text-right">
+        <div class="text-left sm:text-right">
           <p class="font-bold text-lg text-gray-900">$${fmtNum.format(saldo)}</p>
           <p class="text-xs text-gray-500">de $${fmtNum.format(monto)}</p>
         </div>
+
+        ${accionesPdf}
       `;
 
       invoicesList.appendChild(fila);
