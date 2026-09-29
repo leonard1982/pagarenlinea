@@ -90,30 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const rutFactura = (infoRut ? infoRut.textContent : '').replace(/[^0-9]/g, '');
 
       const fila = document.createElement('div');
-      fila.className = 'grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_auto] gap-4 items-center p-4 bg-gray-50 rounded-lg border border-gray-200';
+      fila.className = 'flex items-center justify-between gap-2 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors';
 
       const accionesPdf = pdfDisponible
         ? `
-          <div class="flex sm:flex-col gap-2 sm:pl-4 sm:border-l sm:border-gray-200">
-            <form method="post" action="factura_pdf.php" target="_blank" class="flex-1">
-              <input type="hidden" name="rut" value="${rutFactura}"/>
-              <input type="hidden" name="idventa" value="${(f.IdVentas ?? '').toString()}"/>
-              <input type="hidden" name="accion" value="ver"/>
-              <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Ver PDF de la factura ${(f.Serie ?? '')}${(f.Numero ?? '')}">
-                <span aria-hidden="true">&#128196;</span> Ver PDF
-              </button>
-            </form>
-            <form method="post" action="factura_pdf.php" target="_blank" class="flex-1">
+          <form method="post" action="factura_pdf.php" class="shrink-0">
               <input type="hidden" name="rut" value="${rutFactura}"/>
               <input type="hidden" name="idventa" value="${(f.IdVentas ?? '').toString()}"/>
               <input type="hidden" name="accion" value="descargar"/>
-              <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Descargar PDF de la factura ${(f.Serie ?? '')}${(f.Numero ?? '')}">
-                <span aria-hidden="true">&#8681;</span> Descargar
+              <button type="submit" class="pl-2 sm:pl-4 flex flex-col items-center justify-center group" aria-label="Descargar PDF de la factura ${(f.Serie ?? '')}${(f.Numero ?? '')}">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-red-200 text-red-600 flex items-center justify-center group-hover:bg-red-50 transition-colors mb-1" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:w-4 sm:h-4">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </span>
+                <span class="text-[9px] sm:text-[10px] text-gray-500 font-medium group-hover:text-red-600 transition-colors text-center leading-tight">Descargar<br>PDF</span>
               </button>
-            </form>
-          </div>`
+          </form>`
         : `
-          <div class="sm:pl-4 sm:border-l sm:border-gray-200 text-sm font-medium text-gray-500">
+          <div class="pl-2 sm:pl-4 shrink-0 text-[10px] sm:text-xs font-medium text-gray-500 text-center leading-tight">
             PDF no disponible
           </div>`;
 
@@ -133,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p><span class="font-medium">Fecha:</span> ${f.Fecha ?? ''}</p>
         </div>
 
-        <div class="text-left sm:text-right">
+        <div class="text-right pr-2 sm:pr-4 border-r border-gray-200 shrink-0">
           <p class="font-bold text-lg text-gray-900">$${fmtNum.format(saldo)}</p>
           <p class="text-xs text-gray-500">de $${fmtNum.format(monto)}</p>
         </div>
